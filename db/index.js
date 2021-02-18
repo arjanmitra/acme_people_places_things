@@ -22,8 +22,8 @@ const Thing = db.define('Thing', {
   },
 });
 const Purchase = db.define('Purchase', {
-  nameOfPurchase: {
-    type: DataTypes.STRING,
+  numberOfThings: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 });
@@ -31,6 +31,8 @@ const Purchase = db.define('Purchase', {
 Purchase.belongsTo(Person);
 Purchase.belongsTo(Place);
 Purchase.belongsTo(Thing);
+
+Person.beforeSave('Person', async () => {});
 
 const syncSeed = async () => {
   try {

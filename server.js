@@ -1,4 +1,7 @@
-const db = require('./db');
+const {
+  db,
+  models: { Person, Place, Thing, Purchase },
+} = require('./db');
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -16,14 +19,28 @@ app.use(methodOverride('_method'));
 app.listen(port, () => console.log(`listening on ${port}`));
 
 const Purchases = async () => {
-  const purchasesObject = await db.models.Purchase.findAll();
+  const purchasesObject = await Purchase.findAll({
+    include: [
+      {
+        model: Person,
+      },
+      {
+        model: Place,
+      },
+      {
+        model: Thing,
+      },
+    ],
+  });
   return purchasesObject;
 };
+
 const People = async () => {
   const peopleObject = await db.models.Person.findAll();
   const peopleArrayExtracted = peopleObject.map((elem) => elem.dataValues.name);
   return peopleArrayExtracted;
 };
+
 const Places = async () => {
   const placesObject = await db.models.Place.findAll();
   const placesArrayExtracted = placesObject.map(
@@ -40,6 +57,7 @@ const Things = async () => {
 app.get('/', async (req, res, next) => {
   try {
     //const allPurchases = await Purchases();
+    console.log(await Purchases());
     res.send(
       landingPage(
         await Purchases(),
@@ -73,27 +91,32 @@ app.post('/', async (req, res, next) => {
       name: thing,
     },
   });
-  personSearchId = personSearch[0].dataValues.id;
-  placeSearchId = placeSearch[0].dataValues.id;
-  thingSearchId = thingSearch[0].dataValues.id;
+  if (personSearch === []) {
+    personSearchResult = null;
+  } else {
+    personSearchResult = personSearch[0].dataValues.id;
+  }
+
+  if (placeSearch === []) {
+    placeSearchResult = null;
+  } else {
+    placeSearchResult = placeSearch[0].dataValues.id;
+  }
+
+  if (thingSearch === []) {
+    thingSearchResult = null;
+  } else {
+    thingSearchResult = thingSearch[0].dataValues.id;
+  }
 
   try {
     console.log(req.body);
     await db.models.Purchase.create({
       numberOfThings: numberOfThings,
-      PersonId: personSearchId,
-      PlaceId: placeSearchId,
-      ThingId: thingSearchId,
+      PersonId: personSearchResult,
+      PlaceId: placeSearchResult,
+      ThingId: thingSearchResult,
     });
-    //   include: {
-    //     model: [db.models.Place, db.models.Thing]
-    //   },
-    //   where: {
-    //     id = PersonId,
-    //      = PlaceId,
-
-    //   }
-    // })
     res.send(
       landingPage(
         await Purchases(),

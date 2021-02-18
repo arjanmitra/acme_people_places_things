@@ -28,11 +28,30 @@ const Purchase = db.define('Purchase', {
   },
 });
 
-Purchase.belongsTo(Person);
-Purchase.belongsTo(Place);
-Purchase.belongsTo(Thing);
+// Person.beforeSave((person) => {
+//   if (person.PersonId === '') {
+//     person.PersonId = null;
+//   }
+// });
 
-Person.beforeSave('Person', async () => {});
+// Place.beforeCreate('Place', async (place) => {
+//   if (place.PlaceId === 'not selected') {
+//     place.PlaceId = null;
+//   }
+// });
+
+// Thing.beforeCreate('Thing', async (thing) => {
+//   if (thing.ThingId === 'not selected') {
+//     thing.ThingId = null;
+//   }
+// });
+
+Purchase.belongsTo(Person);
+Person.hasMany(Purchase);
+Purchase.belongsTo(Place);
+Place.hasMany(Purchase);
+Purchase.belongsTo(Thing);
+Thing.hasMany(Purchase);
 
 const syncSeed = async () => {
   try {

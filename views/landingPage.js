@@ -10,26 +10,32 @@ function landingPage(posts = [], people = [], places = [], things = []) {
         <h1>Acme People, Places, Things!</h1>
         <div>
           <form method="POST" action="/">
-            Person<select name="person">
+            Person:
+            <select name="person">
               <option>not selected</option>
               ${people.map(
                 (person) => `<option val = ${person}>${person}</option>`
               )}
             </select>
             <br />
-            Place<select name="place">
+            <br />
+            Place:
+            <select name="place">
               <option>not selected</option>
               ${places.map(
                 (place) => `<option val = ${place}>${place}</option>`
               )}
             </select>
             <br />
-            Thing<select name="thing">
+            <br />
+            Thing:
+            <select name="thing">
               <option>not selected</option>
               ${things.map(
                 (thing) => `<option val = ${thing}>${thing}</option>`
-              )}
-            </select>
+              )}</select
+            ><br />
+            <br />
             Number of Things: <input name="numberOfThings" /> <br /><br />
             <input type="submit" />
           </form>
@@ -38,7 +44,7 @@ function landingPage(posts = [], people = [], places = [], things = []) {
               (post) =>
                 `<div> <form method='post' action='/${post.id}?_method=DELETE'>
 
-                ${post.PersonId} was at ${post.PlaceId} when they purchased ${post.numberOfThings} ${post.ThingId}'s!
+                ${post.Person.name} was at ${post.Place.location} when they purchased ${post.numberOfThings} ${post.Thing.name}'s!
                 <button value=${post.id}>Delete Purchase</button>
                 </form></div>
 
